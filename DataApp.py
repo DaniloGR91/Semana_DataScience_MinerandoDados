@@ -9,14 +9,26 @@ st.title('Boston House Prices')
 st.markdown('A DataApp to show and predict boston house prices')
 # Abrindo dataframe
 boston = load_boston()
-data = pd.DataFrame(boston.data, columns=boston.feature_names)
-data['MEDV'] = boston.target
+data = pd.read_csv('dataML.csv')
 
-# Um modo que possa escolher quais colunas estarão no df
-cols = ['RM', 'AGE', 'LSTAT', 'MEDV']
-# Colocar uma caixa escondida que só aparece quando a pessoa clicar (popup?) com boston.descr
-st.dataframe(data[cols])
+# Escolha das colunas do dataset
+cols = []
+for c in data.columns:
+    cols.append(c)
+selCols = st.multiselect('Parameters for dataset: ',
+                         cols,
+                         default=['RM', 'LSTAT', 'MEDV'])
 
-# gráfico teste
-fig = px.histogram(data, x=data['MEDV'])
+# CheckBox para mostrar a descrição de cada coluna
+if st.checkbox('Show parameters descriptions'):
+    st.text(boston.DESCR[boston.DESCR.find(
+        ':Attribute'):boston.DESCR.find(':Missing')])
+
+# Visualização do DataSet
+st.dataframe(data[selCols])
+
+# Visualização do histograma
+selHist = st.selectbox(
+    'Data for histogram visualization:', cols)
+fig = px.histogram(data, x=data[selHist])
 st.write(fig)
