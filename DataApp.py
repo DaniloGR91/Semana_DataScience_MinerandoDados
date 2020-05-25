@@ -97,13 +97,10 @@ model.fit(x, y)
 st.sidebar.header('Price Prediction')
 predCols = cols.copy()
 predCols.remove('MEDV')
-st.sidebar.multiselect('Parameteres for prediction',
-                       predCols,
-                       default=predCols)
 
 paramInput = []
 maxParam = {}
-for c in cols:
+for c in predCols:
     if c == 'MEDV':
         continue
     maxcol = data[c].max() + data[c].quantile(0.25)
